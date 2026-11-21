@@ -172,3 +172,5 @@ Open your browser at: **`http://127.0.0.1:5000`**
 - **Rounded Product Cards:** `border-radius: 16px`, soft shadow elevation, aspect ratio gallery thumbnails, hover zoom, and quick action icons.
 - **Micro-Interactions:** Smooth slide-out cart drawer, animated free shipping progress bar, live search modal with instant debounced results, toast notifications.
 - **Fully Responsive:** Tested across mobile (< 768px), tablet (768px – 1024px), and desktop (> 1024px).
+# ARTORA
+ARTORA -Create without limits | An E-commerce Platform for Art Supplies
