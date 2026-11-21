@@ -1,0 +1,87 @@
+<!-- Site Footer Component -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <!-- Brand & Mission Column -->
+      <div class="footer-brand">
+        <a href="{{ url_for('main.index') }}" class="brand-logo" style="margin-bottom: 1.25rem;">
+          <div class="brand-symbol">A</div>
+          <div class="brand-text-wrap">
+            <span class="brand-name">ARTORA</span>
+            <span class="brand-tagline-sub" style="color: #E2947D;">Create Without Limits</span>
+          </div>
+        </a>
+        <p>
+          ARTORA is a dedicated haven for visual creators, master painters, illustrators, and fine art ateliers. We source archival linens, pure single-pigment colors, hand-tied brushes, and artisan supplies designed to withstand time.
+        </p>
+        <div style="display: flex; gap: 1rem; font-size: 1.2rem; color: #FAF7F2; margin-top: 1.5rem;">
+          <a href="#" style="color: inherit;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" style="color: inherit;" aria-label="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+          <a href="#" style="color: inherit;" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" style="color: inherit;" aria-label="Behance"><i class="fa-brands fa-behance"></i></a>
+        </div>
+      </div>
+
+      <!-- Categories Column -->
+      <div>
+        <h4 class="footer-title">Fine Mediums</h4>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('shop.catalog', category='canvas-and-painting-surfaces') }}">Canvases & Surfaces</a></li>
+          <li><a href="{{ url_for('shop.catalog', category='acrylic-paints') }}">Acrylic Paints</a></li>
+          <li><a href="{{ url_for('shop.catalog', category='oil-paints') }}">Master Oil Colors</a></li>
+          <li><a href="{{ url_for('shop.catalog', category='watercolor-paints') }}">Honey Watercolors</a></li>
+          <li><a href="{{ url_for('shop.catalog', category='paint-brushes') }}">Sable & Hog Brushes</a></li>
+          <li><a href="{{ url_for('shop.catalog', category='art-kits-and-combos') }}">Art Kits & Combos</a></li>
+        </ul>
+      </div>
+
+      <!-- Studio Care Column -->
+      <div>
+        <h4 class="footer-title">Studio Care</h4>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('main.about') }}">Our Atelier Story</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Contact Studio Curators</a></li>
+          <li><a href="{{ url_for('main.shipping') }}">Shipping & Returns</a></li>
+          <li><a href="{{ url_for('main.faq') }}">Art Supplies Guide & FAQ</a></li>
+          <li><a href="{{ url_for('shop.bestsellers') }}">Studio Bestsellers</a></li>
+          <li><a href="{{ url_for('admin.dashboard') }}">Curator Admin Panel</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Column -->
+      <div>
+        <h4 class="footer-title">The Artist Dispatch</h4>
+        <p style="font-size: 0.9rem; color: #9AA39E; line-height: 1.6;">
+          Join 25,000+ painters receiving monthly studio tips, pigments chemistry dispatches, and exclusive member studio releases.
+        </p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Welcome to the ARTORA Dispatch! Use voucher CREATE10 for 10% off.', 'success'); this.reset();">
+          <input type="email" class="newsletter-input" placeholder="Your studio email..." required />
+          <button type="submit" class="newsletter-btn" aria-label="Subscribe">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+        <div style="font-size: 0.78rem; color: #76807B; margin-top: 0.75rem;">
+          <i class="fa-solid fa-lock" style="margin-right: 4px;"></i> Zero spam. Strictly fine art insights.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright & Payment Badges -->
+    <div class="footer-bottom">
+      <div style="color: #8C9691;">
+        &copy; 2026 ARTORA Atelier Store. All rights reserved. <em>Create Without Limits.</em>
+      </div>
+
+      <div class="payment-badges">
+        <span style="font-size: 0.8rem; color: #B4BCB7; margin-right: 0.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">
+          <i class="fa-solid fa-shield-halved" style="color: var(--sage);"></i> Razorpay Secure:
+        </span>
+        <i class="fa-brands fa-cc-visa" title="Visa"></i>
+        <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+        <i class="fa-solid fa-credit-card" title="RuPay & Cards"></i>
+        <i class="fa-solid fa-mobile-screen" title="UPI & QR"></i>
+        <i class="fa-solid fa-building-columns" title="NetBanking"></i>
+      </div>
+    </div>
+  </div>
+</footer>

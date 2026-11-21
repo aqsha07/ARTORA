@@ -1,0 +1,303 @@
+/* ==========================================================================
+   ARTORA Cart & Checkout Stylesheet
+   ========================================================================== */
+
+/* --------------------------------------------------
+   1. SHOPPING CART PAGE
+   -------------------------------------------------- */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 3rem;
+  align-items: start;
+}
+
+.cart-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg-ivory-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-ivory);
+  box-shadow: var(--shadow-sm);
+}
+
+.cart-items-table th {
+  background-color: var(--bg-ivory-warm);
+  padding: 1.1rem 1.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--charcoal-700);
+}
+
+.cart-items-table td {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-ivory);
+  vertical-align: middle;
+}
+
+.cart-items-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cart-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.cart-item-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-ivory-warm);
+  flex-shrink: 0;
+}
+
+.cart-product-title {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--charcoal-900);
+  margin-bottom: 0.35rem;
+}
+
+.cart-product-cat {
+  font-size: 0.8rem;
+  color: var(--sage-dark);
+}
+
+.cart-price-cell {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+
+.cart-summary-box {
+  background-color: var(--bg-ivory-light);
+  border: 1px solid var(--border-ivory);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 100px;
+}
+
+.cart-summary-title {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-ivory);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: var(--charcoal-700);
+}
+
+.summary-row.total-row {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--charcoal-900);
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--border-ivory);
+}
+
+.promo-form-wrap {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.promo-input {
+  flex: 1;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------
+   2. CHECKOUT FLOW
+   -------------------------------------------------- */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.checkout-card {
+  background-color: var(--bg-ivory-light);
+  border: 1px solid var(--border-ivory);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.checkout-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-ivory);
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background-color: var(--terracotta);
+  color: #FFF;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Payment Method Cards */
+.payment-methods-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.payment-method-card {
+  border: 2px solid var(--border-ivory);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background-color: #FFF;
+}
+
+.payment-method-card:hover {
+  border-color: var(--terracotta-tint);
+  background-color: var(--bg-ivory);
+}
+
+.payment-method-card.selected {
+  border-color: var(--terracotta);
+  background-color: var(--terracotta-light);
+}
+
+.payment-method-icon {
+  font-size: 1.8rem;
+  color: var(--terracotta);
+  width: 45px;
+  text-align: center;
+}
+
+.payment-method-title {
+  font-weight: 700;
+  color: var(--charcoal-900);
+  margin-bottom: 2px;
+}
+
+.payment-method-desc {
+  font-size: 0.82rem;
+  color: var(--charcoal-600);
+}
+
+/* --------------------------------------------------
+   3. ORDER SUCCESS & RECEIPT
+   -------------------------------------------------- */
+.success-card {
+  background-color: var(--bg-ivory-light);
+  border: 1px solid var(--border-ivory);
+  border-radius: var(--radius-xl);
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.success-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background-color: #EBF5ED;
+  color: #276738;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 4px 12px rgba(39, 103, 56, 0.2);
+}
+
+.order-timeline {
+  display: flex;
+  justify-content: space-between;
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.order-timeline::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  height: 3px;
+  background-color: var(--border-ivory);
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.timeline-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-ivory);
+  border: 3px solid var(--border-ivory);
+  margin: 0 auto 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--charcoal-500);
+}
+
+.timeline-step.completed .timeline-dot {
+  background-color: var(--sage);
+  border-color: var(--sage);
+  color: #FFF;
+}
+
+.timeline-step.active .timeline-dot {
+  background-color: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #FFF;
+}
+
+.timeline-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--charcoal-700);
+}
+
+@media (max-width: 900px) {
+  .cart-layout, .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}

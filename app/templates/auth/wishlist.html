@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Saved Wishlist | ARTORA{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.85rem; color: var(--charcoal-500); margin-bottom: 2rem;">
+    <a href="{{ url_for('main.index') }}" style="color: inherit;">Home</a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <a href="{{ url_for('auth.profile') }}" style="color: inherit;">Artist Dashboard</a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <span style="color: var(--terracotta); font-weight: 600;">Saved Wishlist</span>
+  </div>
+
+  <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+    <span class="section-eyebrow">Personal Curation</span>
+    <h1 class="section-title">Your Studio Wishlist</h1>
+    <p class="section-desc">Art supplies and essentials you have bookmarked for your next creative project.</p>
+  </div>
+
+  {% if wishlist_items %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+      {% for item in wishlist_items %}
+        {% set product = item.product %}
+        {% set user_wishlist_ids = [product.id] %}
+        {% include 'components/product_card.html' %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 6rem 2rem; background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-xl); max-width: 680px; margin: 0 auto;">
+      <i class="fa-regular fa-heart" style="font-size: 4rem; color: var(--border-ivory); margin-bottom: 1.5rem;"></i>
+      <h2 style="font-size: 1.8rem; margin-bottom: 0.75rem;">Your Wishlist is Empty</h2>
+      <p style="color: var(--charcoal-600); max-width: 480px; margin: 0 auto 2rem; line-height: 1.6;">
+        Tap the heart icon on any canvas, paint set, or sable brush in our shop to save it here for later.
+      </p>
+      <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta btn-lg">
+        Explore Art Supplies
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+/* ==========================================================================
+   ARTORA Admin Curator Dashboard Stylesheet
+   ========================================================================== */
+
+.admin-header-bar {
+  background-color: var(--charcoal-900);
+  color: #FFF;
+  padding: 1rem 0;
+  border-bottom: 2px solid var(--terracotta);
+}
+
+.admin-nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.admin-nav-link {
+  color: #B4BCB7;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.admin-nav-link:hover, .admin-nav-link.active {
+  color: #FFF;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.metric-card {
+  background-color: var(--bg-ivory-light);
+  border: 1px solid var(--border-ivory);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+.metric-icon-sales { background-color: var(--terracotta-light); color: var(--terracotta); }
+.metric-icon-orders { background-color: var(--sage-light); color: var(--sage); }
+.metric-icon-products { background-color: #EBF3F8; color: #3E82AF; }
+.metric-icon-users { background-color: #F8EFE5; color: #BD7C39; }
+
+.metric-data h3 {
+  font-size: 1.8rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--charcoal-900);
+  line-height: 1;
+}
+
+.metric-data p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--charcoal-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+/* Admin Data Tables */
+.admin-table-card {
+  background-color: var(--bg-ivory-light);
+  border: 1px solid var(--border-ivory);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2.5rem;
+}
+
+.admin-table-header {
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-ivory);
+  background-color: var(--bg-ivory-warm);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-ivory);
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  font-weight: 700;
+  color: var(--charcoal-700);
+  background-color: #FAF7F2;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.admin-table tr:hover td {
+  background-color: var(--bg-ivory);
+}
+
+.table-product-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--radius-xs);
+  vertical-align: middle;
+  margin-right: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .admin-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Studio Care & Contact | ARTORA{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 4rem;">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Studio Dispatch</span>
+      <h1 class="section-title">Connect with Our Curators</h1>
+      <p class="section-desc">
+        Need assistance selecting the right linen surface, pigment toxicity data, or bulk academy supplies? Our team of practicing artists is here to help.
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1.25fr; gap: 4rem; align-items: start; max-width: 1040px; margin: 0 auto;">
+      <!-- Contact Details -->
+      <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-sm);">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem;">Atelier Headquarters</h3>
+
+        <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+          <div style="display: flex; gap: 1.25rem;">
+            <div style="width: 44px; height: 44px; background-color: var(--terracotta-light); color: var(--terracotta); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; color: var(--charcoal-900);">ARTORA Atelier & Studios</div>
+              <div style="font-size: 0.92rem; color: var(--charcoal-600); line-height: 1.6;">
+                14th Cross, 100 Feet Road, Indiranagar<br>
+                Bengaluru, Karnataka 560038, India
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1.25rem;">
+            <div style="width: 44px; height: 44px; background-color: var(--sage-light); color: var(--sage-dark); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; color: var(--charcoal-900);">Studio Curators Email</div>
+              <div style="font-size: 0.92rem; color: var(--charcoal-600);">
+                curators@artora.com<br>
+                orders@artora.com
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1.25rem;">
+            <div style="width: 44px; height: 44px; background-color: var(--bg-ivory-warm); color: var(--charcoal-900); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; color: var(--charcoal-900);">Helpline & WhatsApp</div>
+              <div style="font-size: 0.92rem; color: var(--charcoal-600);">
+                +91 (080) 4567 8900<br>
+                Mon – Sat: 9:30 AM – 7:00 PM IST
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-ivory);">
+          <div style="font-size: 0.88rem; font-weight: 700; color: var(--charcoal-900); margin-bottom: 0.5rem;">
+            Visiting our physical gallery?
+          </div>
+          <p style="font-size: 0.85rem; color: var(--charcoal-600); margin: 0;">
+            Our studio material testing tables are open to artists every Tuesday and Friday by appointment.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Inquiry Form -->
+      <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-sm);">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem;">Send a Dispatch</h3>
+
+        <form action="{{ url_for('main.contact') }}" method="POST">
+          <div class="form-group">
+            <label class="form-label" for="contactName">Your Full Name *</label>
+            <input type="text" name="name" id="contactName" class="form-control" placeholder="e.g. Kavita Raman" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactEmail">Email Address *</label>
+            <input type="email" name="email" id="contactEmail" class="form-control" placeholder="name@domain.com" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactSubject">Subject / Creative Discipline</label>
+            <select name="subject" id="contactSubject" class="form-select">
+              <option value="Product Sourcing Inquiry">Product Sourcing & Specs Inquiry</option>
+              <option value="Order & Delivery Status">Order Status or Delivery Question</option>
+              <option value="Bulk Studio or Academy Order">Bulk Studio / Academy Supplies</option>
+              <option value="Artist Collaboration">Artist Atelier Collaboration</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contactMessage">Your Message *</label>
+            <textarea name="message" id="contactMessage" class="form-control" placeholder="Describe the materials you need advice on or your question..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-terracotta btn-lg btn-block">
+            Send Message <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Canvas Not Found (404) | ARTORA{% endblock %}
+
+{% block content %}
+<section class="section" style="padding: 7rem 0; text-align: center;">
+  <div class="container container-sm">
+    <div style="font-size: 5rem; font-family: var(--font-serif); font-weight: 700; color: var(--terracotta); line-height: 1; margin-bottom: 1rem;">
+      404
+    </div>
+    <h1 style="font-size: 2.2rem; margin-bottom: 1rem;">This Canvas is Still Blank.</h1>
+    <p style="font-size: 1.1rem; color: var(--charcoal-600); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6;">
+      The art supplies page or resource you are looking for has been moved or curated elsewhere.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+      <a href="{{ url_for('main.index') }}" class="btn btn-terracotta btn-lg">
+        Return to Atelier Home
+      </a>
+      <a href="{{ url_for('shop.catalog') }}" class="btn btn-lg" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+        Browse Catalog
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

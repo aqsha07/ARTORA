@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Join ARTORA Collective | Register{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width: 520px;">
+    <div class="auth-header">
+      <div class="brand-symbol" style="margin: 0 auto 1rem; width: 48px; height: 48px; font-size: 1.4rem;">A</div>
+      <h1>Create Artist Account</h1>
+      <p>Join thousands of fine artists and receive exclusive studio member benefits.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}">
+      <div class="form-group">
+        <label class="form-label" for="regName">Full Name *</label>
+        <input type="text" name="name" id="regName" class="form-control" placeholder="e.g. Kavita Raman" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regEmail">Studio Email Address *</label>
+        <input type="email" name="email" id="regEmail" class="form-control" placeholder="name@domain.com" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regPhone">Mobile Number (Optional)</label>
+        <input type="tel" name="phone" id="regPhone" class="form-control" placeholder="+91 98765 43210" />
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password *</label>
+          <input type="password" name="password" id="regPassword" class="form-control" placeholder="At least 6 chars" required minlength="6" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regConfirm">Confirm Password *</label>
+          <input type="password" name="confirm_password" id="regConfirm" class="form-control" placeholder="Re-enter password" required minlength="6" />
+        </div>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--charcoal-500); margin-bottom: 1.5rem; line-height: 1.5;">
+        By joining ARTORA, you agree to our <a href="{{ url_for('main.shipping') }}">Terms of Studio Service</a> and receive our monthly pigment dispatches.
+      </div>
+
+      <button type="submit" class="btn btn-terracotta btn-lg btn-block">
+        Create Artist Account <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-ivory); font-size: 0.92rem; color: var(--charcoal-600);">
+      Already have an account?
+      <a href="{{ url_for('auth.login') }}" style="color: var(--terracotta); font-weight: 700;">Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

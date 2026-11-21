@@ -1,0 +1,63 @@
+<!-- Quick-View Product Modal Component -->
+<div class="quick-view-backdrop" id="quickViewBackdrop">
+  <div class="quick-view-modal">
+    <button type="button" class="quick-view-close" id="closeQuickView" aria-label="Close modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="quick-view-content">
+      <div class="quick-view-gallery">
+        <img id="qvModalImage" src="" alt="Product Preview" class="quick-view-img" />
+      </div>
+
+      <div class="quick-view-details">
+        <div style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--sage-dark); margin-bottom: 0.4rem;" id="qvModalCategory">
+          Category
+        </div>
+
+        <h2 id="qvModalTitle" style="font-size: 1.6rem; margin-bottom: 0.75rem; line-height: 1.3;">
+          Product Title
+        </h2>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: #E29B27; font-size: 0.88rem; margin-bottom: 1.25rem;">
+          <i class="fa-solid fa-star"></i>
+          <span id="qvModalRating" style="color: var(--charcoal-700); font-weight: 600;">4.8 (12 reviews)</span>
+        </div>
+
+        <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.25rem;">
+          <span id="qvModalPrice" style="font-size: 1.8rem; font-weight: 700; color: var(--terracotta-dark);">
+            ₹0.00
+          </span>
+          <span id="qvModalCompare" style="font-size: 1.1rem; color: var(--charcoal-500); text-decoration: line-through;">
+            ₹0.00
+          </span>
+        </div>
+
+        <p id="qvModalDesc" style="font-size: 0.92rem; color: var(--charcoal-700); line-height: 1.6; margin-bottom: 1.75rem;">
+          Product description snippet...
+        </p>
+
+        <!-- Quick Add to Cart Form -->
+        <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="ajax-add-to-cart-form" style="margin-bottom: 1.5rem;">
+          <input type="hidden" name="product_id" id="qvModalProductId" value="" />
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <div class="qty-stepper">
+              <button type="button" class="qty-step-btn" data-action="decrement">-</button>
+              <input type="number" name="quantity" class="qty-input" value="1" min="1" max="99" />
+              <button type="button" class="qty-step-btn" data-action="increment">+</button>
+            </div>
+            <button type="submit" class="btn btn-terracotta" style="flex: 1; height: 48px;">
+              <i class="fa-solid fa-bag-shopping"></i> Add to Art Cart
+            </button>
+          </div>
+        </form>
+
+        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-ivory);">
+          <a id="qvModalFullLink" href="#" style="font-size: 0.9rem; font-weight: 600; color: var(--terracotta); display: inline-flex; align-items: center; gap: 0.35rem;">
+            View full technical specifications & artist reviews <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

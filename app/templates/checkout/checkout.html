@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Secure Checkout | ARTORA{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+    <span class="section-eyebrow">Studio Checkout</span>
+    <h1 class="section-title">Finalize Your Order</h1>
+  </div>
+
+  <form action="{{ url_for('checkout.process_order') }}" method="POST" id="checkoutForm">
+    <!-- Hidden fields for Razorpay payment callback -->
+    <input type="hidden" name="razorpay_payment_id" id="razorpayPaymentId" value="" />
+    <input type="hidden" name="razorpay_order_id" id="razorpayOrderId" value="" />
+    <input type="hidden" name="razorpay_signature" id="razorpaySignature" value="" />
+    <input type="hidden" name="payment_method" id="selectedPaymentMethod" value="razorpay" />
+
+    <div class="checkout-layout">
+      <!-- Left Column: Shipping & Payment Steps -->
+      <div>
+        <!-- STEP 1: Shipping Address -->
+        <div class="checkout-card">
+          <div class="checkout-card-header">
+            <span class="step-number">1</span>
+            <h3 style="font-size: 1.3rem; margin: 0;">Shipping & Studio Destination</h3>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label" for="shippingFullName">Recipient Full Name *</label>
+              <input type="text" name="full_name" id="shippingFullName" class="form-control" value="{{ initial_data.get('full_name', '') }}" placeholder="e.g. Mira Kapoor" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="shippingEmail">Studio Email Address *</label>
+              <input type="email" name="email" id="shippingEmail" class="form-control" value="{{ initial_data.get('email', '') }}" placeholder="name@domain.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="shippingPhone">Mobile Phone (for Courier SMS) *</label>
+              <input type="tel" name="phone" id="shippingPhone" class="form-control" value="{{ initial_data.get('phone', '') }}" placeholder="+91 98765 43210" required />
+            </div>
+
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label" for="shippingAddress">Street Address / Studio Suite *</label>
+              <input type="text" name="street_address" id="shippingAddress" class="form-control" value="{{ initial_data.get('street_address', '') }}" placeholder="Flat/Studio No, Building, Street, Landmark" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="shippingCity">City *</label>
+              <input type="text" name="city" id="shippingCity" class="form-control" value="{{ initial_data.get('city', '') }}" placeholder="e.g. Bengaluru" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="shippingState">State *</label>
+              <input type="text" name="state" id="shippingState" class="form-control" value="{{ initial_data.get('state', '') }}" placeholder="e.g. Karnataka" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="shippingPincode">Postal PIN Code *</label>
+              <input type="text" name="pincode" id="shippingPincode" class="form-control" value="{{ initial_data.get('pincode', '') }}" placeholder="e.g. 560038" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="orderNotes">Courier Delivery Notes (Optional)</label>
+              <input type="text" name="order_notes" id="orderNotes" class="form-control" placeholder="Leave at studio reception, call before delivery" />
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Payment Method Selection -->
+        <div class="checkout-card">
+          <div class="checkout-card-header">
+            <span class="step-number">2</span>
+            <h3 style="font-size: 1.3rem; margin: 0;">Payment Method</h3>
+          </div>
+
+          <div class="payment-methods-grid">
+            <!-- 1. Razorpay Official Test Gateway -->
+            <div class="payment-method-card selected" data-method="razorpay">
+              <div class="payment-method-icon">
+                <i class="fa-solid fa-credit-card"></i>
+              </div>
+              <div style="flex: 1;">
+                <div class="payment-method-title">
+                  Razorpay Secure Gateway (Test Mode)
+                  <span class="badge badge-sage" style="margin-left: 0.5rem; font-size: 0.68rem;">RECOMMENDED</span>
+                </div>
+                <div class="payment-method-desc">
+                  UPI (GPay, PhonePe, Paytm), RuPay, Visa, Mastercard, NetBanking & Wallets. Supports test mode sandbox simulation.
+                </div>
+              </div>
+              <div style="font-size: 1.25rem; color: var(--terracotta);">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <!-- 2. Cash on Delivery (COD) -->
+            <div class="payment-method-card" data-method="cod">
+              <div class="payment-method-icon">
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+              <div style="flex: 1;">
+                <div class="payment-method-title">Cash on Delivery (COD)</div>
+                <div class="payment-method-desc">
+                  Pay with cash or UPI QR code at your studio upon doorstep delivery.
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Instant Test Mock Simulator -->
+            <div class="payment-method-card" data-method="mock_test">
+              <div class="payment-method-icon">
+                <i class="fa-solid fa-flask-vial"></i>
+              </div>
+              <div style="flex: 1;">
+                <div class="payment-method-title">Instant Sandbox Mock Checkout</div>
+                <div class="payment-method-desc">
+                  Bypasses payment prompts for rapid end-to-end evaluation and verification of orders.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Order Summary & Place Order CTA -->
+      <div>
+        <div class="cart-summary-box">
+          <h3 class="cart-summary-title">Items in Order ({{ summary.items_count }})</h3>
+
+          <div style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; padding-right: 0.5rem;">
+            {% for item in summary.cart_items %}
+              <div style="display: flex; gap: 1rem; align-items: center;">
+                <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-xs);" />
+                <div style="flex: 1;">
+                  <h4 style="font-size: 0.88rem; font-family: var(--font-sans); margin-bottom: 2px;">{{ item.name }}</h4>
+                  <div style="font-size: 0.8rem; color: var(--charcoal-500);">Qty: {{ item.quantity }} × {{ item.price | currency }}</div>
+                </div>
+                <div style="font-weight: 700; font-size: 0.92rem; color: var(--terracotta);">
+                  {{ (item.price * item.quantity) | currency }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ summary.subtotal | currency }}</span>
+          </div>
+
+          {% if summary.discount > 0 %}
+            <div class="summary-row" style="color: var(--terracotta);">
+              <span>Voucher ({{ summary.promo.code }})</span>
+              <span>-{{ summary.discount | currency }}</span>
+            </div>
+          {% endif %}
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>
+              {% if summary.shipping_fee == 0 %}
+                <span style="color: var(--color-success); font-weight: 700;">FREE</span>
+              {% else %}
+                {{ summary.shipping_fee | currency }}
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="summary-row">
+            <span>Taxes & GST (5%)</span>
+            <span>{{ summary.tax | currency }}</span>
+          </div>
+
+          <div class="summary-row total-row">
+            <span>Payable Amount</span>
+            <span style="color: var(--terracotta-dark);">{{ summary.grand_total | currency }}</span>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <button type="submit" id="placeOrderBtn" class="btn btn-terracotta btn-lg btn-block">
+              Complete Order & Pay <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <div style="font-size: 0.78rem; color: var(--charcoal-500); text-align: center; margin-top: 1.25rem; line-height: 1.5;">
+            <i class="fa-solid fa-shield-halved" style="color: var(--sage);"></i> Powered by Razorpay test mode. No real money will be charged.
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Manage Customer Orders | ARTORA Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <span class="section-eyebrow" style="color: var(--terracotta);">Fulfillment Operations</span>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.25rem;">Customer Orders</h1>
+      <p style="color: var(--charcoal-600); margin: 0;">Review incoming studio orders, tracking updates, and dispatch logistics.</p>
+    </div>
+  </div>
+
+  <!-- Status Filter Pills -->
+  <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+    <a href="{{ url_for('admin.orders') }}" class="btn btn-sm {% if not status_filter %}btn-charcoal{% else %}" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-700);"{% endif %}>
+      All Orders
+    </a>
+    <a href="{{ url_for('admin.orders', status='Processing') }}" class="btn btn-sm {% if status_filter == 'Processing' %}btn-terracotta{% else %}" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-700);"{% endif %}>
+      Processing
+    </a>
+    <a href="{{ url_for('admin.orders', status='Shipped') }}" class="btn btn-sm {% if status_filter == 'Shipped' %}btn-sage{% else %}" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-700);"{% endif %}>
+      Shipped
+    </a>
+    <a href="{{ url_for('admin.orders', status='Delivered') }}" class="btn btn-sm {% if status_filter == 'Delivered' %}btn-charcoal{% else %}" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-700);"{% endif %}>
+      Delivered
+    </a>
+    <a href="{{ url_for('admin.orders', status='Pending') }}" class="btn btn-sm {% if status_filter == 'Pending' %}btn-terracotta{% else %}" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-700);"{% endif %}>
+      Pending
+    </a>
+  </div>
+
+  <!-- Orders Table Card -->
+  <div class="admin-table-card">
+    {% if orders %}
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order Number</th>
+            <th>Customer</th>
+            <th>Destination</th>
+            <th>Items</th>
+            <th>Total Amount</th>
+            <th>Payment Status</th>
+            <th>Fulfillment</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>
+                <strong style="color: var(--terracotta);">{{ order.order_number }}</strong>
+                <div style="font-size: 0.78rem; color: var(--charcoal-500);">{{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">{{ order.full_name }}</div>
+                <div style="font-size: 0.78rem; color: var(--charcoal-500);">{{ order.email }}</div>
+                <div style="font-size: 0.78rem; color: var(--charcoal-500);">{{ order.phone }}</div>
+              </td>
+              <td>{{ order.shipping_city }}, {{ order.shipping_state }}</td>
+              <td>{{ order.total_items_count }} items</td>
+              <td><strong>{{ order.total_amount | currency }}</strong></td>
+              <td>
+                <span style="font-size: 0.85rem; color: var(--color-success); font-weight: 600;">
+                  <i class="fa-solid fa-circle-check"></i> {{ order.payment_status }}
+                </span>
+                <div style="font-size: 0.75rem; color: var(--charcoal-500);">{{ order.payment_method | upper }}</div>
+              </td>
+              <td>
+                <span class="badge {{ order.status_badge_class }}">{{ order.status }}</span>
+              </td>
+              <td style="text-align: right;">
+                <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-terracotta">
+                  Inspect & Update
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div style="padding: 4rem; text-align: center; color: var(--charcoal-500);">
+        <i class="fa-solid fa-boxes-packing" style="font-size: 3rem; color: var(--border-ivory); margin-bottom: 1rem;"></i>
+        <p>No orders found matching this filter.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

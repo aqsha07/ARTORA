@@ -1,0 +1,47 @@
+<!-- Reusable Pagination Component -->
+{% if pagination and pagination.pages > 1 %}
+  <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3.5rem;">
+    {% if pagination.has_prev %}
+      <a 
+        href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) }}" 
+        class="btn btn-sm" 
+        style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-800);"
+      >
+        <i class="fa-solid fa-angle-left"></i> Previous
+      </a>
+    {% endif %}
+
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        {% if p == pagination.page %}
+          <span 
+            class="btn btn-sm" 
+            style="background-color: var(--terracotta); color: #FFF; width: 38px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm);"
+          >
+            {{ p }}
+          </span>
+        {% else %}
+          <a 
+            href="{{ url_for(request.endpoint, page=p, **request.args) }}" 
+            class="btn btn-sm" 
+            style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-800); width: 38px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm);"
+          >
+            {{ p }}
+          </a>
+        {% endif %}
+      {% else %}
+        <span style="color: var(--charcoal-400); padding: 0 0.25rem;">...</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+      <a 
+        href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) }}" 
+        class="btn btn-sm" 
+        style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-800);"
+      >
+        Next <i class="fa-solid fa-angle-right"></i>
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

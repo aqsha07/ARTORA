@@ -1,0 +1,125 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Order {{ order.order_number }} | ARTORA Admin{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <span class="section-eyebrow" style="color: var(--terracotta);">Fulfillment Inspector</span>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.25rem;">Order {{ order.order_number }}</h1>
+      <p style="color: var(--charcoal-600); margin: 0;">Placed on {{ order.created_at.strftime('%A, %d %B %Y at %I:%M %p') }}</p>
+    </div>
+    <a href="{{ url_for('admin.orders') }}" class="btn" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+      <i class="fa-solid fa-arrow-left"></i> Back to Orders
+    </a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+    <!-- Order Status Management Card -->
+    <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-sm);">
+      <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Update Fulfillment & Courier</h3>
+
+      <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; align-items: flex-end;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="orderStatus">Fulfillment Status</label>
+            <select name="status" id="orderStatus" class="form-select">
+              <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+              <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+              <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+              <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+              <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="courierName">Courier Carrier</label>
+            <input type="text" name="courier_name" id="courierName" class="form-control" value="{{ order.courier_name or 'Artora Express Courier' }}" />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="trackingNum">Tracking AWB Number</label>
+            <input type="text" name="tracking_number" id="trackingNum" class="form-control" value="{{ order.tracking_number or '' }}" placeholder="e.g. ARTEX-98765432" />
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="submit" class="btn btn-terracotta">
+            <i class="fa-solid fa-floppy-disk"></i> Update Order Status
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Customer & Payment Details Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-lg); padding: 2rem;">
+        <h4 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--charcoal-900);">Customer & Shipping</h4>
+        <div style="font-size: 0.95rem; line-height: 1.7; color: var(--charcoal-700);">
+          <strong>{{ order.full_name }}</strong><br>
+          {{ order.shipping_address }}<br>
+          {{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_pincode }}<br>
+          Email: <a href="mailto:{{ order.email }}">{{ order.email }}</a><br>
+          Phone: {{ order.phone }}
+          {% if order.order_notes %}
+            <div style="margin-top: 0.75rem; padding: 0.5rem 0.75rem; background-color: var(--bg-ivory-warm); border-radius: var(--radius-xs); font-size: 0.85rem;">
+              <strong>Delivery Notes:</strong> {{ order.order_notes }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-lg); padding: 2rem;">
+        <h4 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--charcoal-900);">Payment & Gateway</h4>
+        <div style="font-size: 0.95rem; line-height: 1.7; color: var(--charcoal-700);">
+          Status: <strong>{{ order.payment_status }}</strong><br>
+          Method: <strong>{{ order.payment_method | upper }}</strong><br>
+          {% if order.razorpay_order_id %}
+            Razorpay Order ID: <code>{{ order.razorpay_order_id }}</code><br>
+          {% endif %}
+          {% if order.razorpay_payment_id %}
+            Razorpay Payment ID: <code>{{ order.razorpay_payment_id }}</code><br>
+          {% endif %}
+          Subtotal: {{ order.subtotal | currency }}<br>
+          Shipping: {{ order.shipping_fee | currency }}<br>
+          Taxes: {{ order.tax_amount | currency }}<br>
+          <strong>Total Paid: {{ order.total_amount | currency }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items in Order -->
+    <div class="admin-table-card">
+      <div class="admin-table-header">
+        <h3 style="font-size: 1.15rem;">Purchased Items ({{ order.total_items_count }})</h3>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.items.all() %}
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <img src="{{ item.product_image }}" alt="{{ item.product_name }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: var(--radius-xs);" />
+                  <strong>{{ item.product_name }}</strong>
+                </div>
+              </td>
+              <td>{{ item.product_price | currency }}</td>
+              <td>{{ item.quantity }}</td>
+              <td><strong>{{ item.subtotal | currency }}</strong></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

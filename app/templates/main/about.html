@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Atelier Story | ARTORA - Create Without Limits{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 4rem;">
+  <div class="container container-sm">
+    <div class="section-header">
+      <span class="section-eyebrow">The ARTORA Philosophy</span>
+      <h1 class="section-title">Create Without Limits.</h1>
+      <p class="section-desc">
+        We believe that fine materials are not luxuries; they are the faithful conduits of human imagination and emotional truth.
+      </p>
+    </div>
+
+    <div style="border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 3.5rem; box-shadow: var(--shadow-lg);">
+      <img 
+        src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=1200&q=80" 
+        alt="ARTORA Artist Studio Atelier" 
+        style="width: 100%; height: 420px; object-fit: cover;"
+      />
+    </div>
+
+    <div style="font-size: 1.1rem; line-height: 1.8; color: var(--charcoal-800); display: flex; flex-direction: column; gap: 1.75rem;">
+      <p>
+        Founded by practicing painters and art conservationists, <strong>ARTORA</strong> was born out of frustration with student-grade materials masquerading as professional supplies. We set out to establish a transparent, uncompromising sanctuary where artists could obtain genuine single-pigment oils, sustainably harvested Kolinsky brushes, pure honey watercolors, and warp-proof archival canvases.
+      </p>
+
+      <div style="background-color: var(--bg-ivory-warm); border-left: 4px solid var(--terracotta); padding: 1.5rem 2rem; border-radius: var(--radius-sm); font-family: var(--font-serif); font-size: 1.25rem; color: var(--charcoal-900); font-style: italic;">
+        "When an artist touches brush to canvas, there should be zero resistance between their heartbeat and the pigment."
+      </div>
+
+      <h2 style="font-size: 1.8rem; margin-top: 1rem; color: var(--charcoal-900);">Our Three Atelier Pillars</h2>
+      
+      <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+        <div style="background-color: #FFF; border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.75rem;">
+          <h3 style="font-size: 1.25rem; color: var(--terracotta); margin-bottom: 0.5rem;">
+            1. Zero Fillers & Heavy Extenders
+          </h3>
+          <p style="font-size: 0.98rem; color: var(--charcoal-700); margin: 0;">
+            Every tube of oil, acrylic, and watercolor we stock is evaluated for pure pigment loading. We ban cheap chalk extenders, barium sulfates, and synthetic dyes that fade under sunlight.
+          </p>
+        </div>
+
+        <div style="background-color: #FFF; border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.75rem;">
+          <h3 style="font-size: 1.25rem; color: var(--sage-dark); margin-bottom: 0.5rem;">
+            2. Archival Longevity & ASTM Compliance
+          </h3>
+          <p style="font-size: 0.98rem; color: var(--charcoal-700); margin: 0;">
+            All papers, canvases, and boards comply with ISO 9706 acid-free standards and ASTM lightfastness ratings, ensuring your artwork endures across generations without yellowing or cracking.
+          </p>
+        </div>
+
+        <div style="background-color: #FFF; border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.75rem;">
+          <h3 style="font-size: 1.25rem; color: var(--charcoal-900); margin-bottom: 0.5rem;">
+            3. Ethical Sourcing & FSC Forestry
+          </h3>
+          <p style="font-size: 0.98rem; color: var(--charcoal-700); margin: 0;">
+            From sustainably managed European beechwood for our studio easels to cruelty-free synthetic bristle innovations, our studio respects the earth that provides our raw minerals.
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta btn-lg">
+          Explore Our Complete Collection <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

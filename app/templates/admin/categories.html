@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Manage Art Categories | ARTORA Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <span class="section-eyebrow" style="color: var(--terracotta);">Department Architecture</span>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.25rem;">Product Categories (11)</h1>
+      <p style="color: var(--charcoal-600); margin: 0;">Core categories structuring the entire ARTORA art supplies store.</p>
+    </div>
+  </div>
+
+  <div class="admin-table-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Department Name</th>
+          <th>Tagline / Description</th>
+          <th>Icon</th>
+          <th>Products Count</th>
+          <th>Order</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat in categories %}
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img src="{{ cat.image_url }}" alt="{{ cat.name }}" style="width: 44px; height: 44px; object-fit: cover; border-radius: var(--radius-sm);" />
+                <div>
+                  <strong><a href="{{ url_for('shop.category', slug=cat.slug) }}" target="_blank" style="color: var(--charcoal-900);">{{ cat.name }}</a></strong>
+                  <div style="font-size: 0.75rem; color: var(--charcoal-400);">/shop/category/{{ cat.slug }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size: 0.88rem; color: var(--charcoal-700); max-width: 400px;">{{ cat.tagline }}</div>
+            </td>
+            <td>
+              <i class="fa-solid {{ cat.icon_class or 'fa-palette' }}" style="color: var(--terracotta); font-size: 1.1rem;"></i>
+            </td>
+            <td>
+              <span class="badge badge-sage">{{ cat.product_count }} items</span>
+            </td>
+            <td>
+              <strong>#{{ cat.display_order }}</strong>
+            </td>
+            <td>
+              <a href="{{ url_for('shop.category', slug=cat.slug) }}" target="_blank" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-800);">
+                View Public <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

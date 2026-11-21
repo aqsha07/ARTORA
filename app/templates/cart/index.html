@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart | ARTORA - Create Without Limits{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+    <span class="section-eyebrow">Studio Bag</span>
+    <h1 class="section-title">Your Art Supplies Cart</h1>
+  </div>
+
+  {% if summary.cart_items %}
+    <div class="cart-layout">
+      <!-- Items Table -->
+      <div>
+        <!-- Free Shipping Meter -->
+        <div class="shipping-progress-banner" style="border-radius: var(--radius-md); margin-bottom: 2rem; border: 1px solid var(--sage-border);">
+          <div>
+            {% if summary.amount_needed_for_free_shipping > 0 %}
+              Add items worth <strong>{{ summary.amount_needed_for_free_shipping | currency }}</strong> to unlock Free Express Shipping.
+            {% else %}
+              <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> <strong>Congratulations!</strong> Your order qualifies for Free Shipping.
+            {% endif %}
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" style="width: {{ summary.shipping_progress }}%;"></div>
+          </div>
+        </div>
+
+        <table class="cart-items-table">
+          <thead>
+            <tr>
+              <th>Art Supply</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in summary.cart_items %}
+              <tr>
+                <td>
+                  <div class="cart-product-cell">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-thumbnail" />
+                    <div>
+                      <div class="cart-product-cat">{{ item.category_name }}</div>
+                      <h4 class="cart-product-title">
+                        <a href="{{ url_for('shop.detail', slug=item.slug) }}">{{ item.name }}</a>
+                      </h4>
+                    </div>
+                  </div>
+                </td>
+                <td class="cart-price-cell">
+                  {{ item.price | currency }}
+                </td>
+                <td>
+                  <div class="qty-stepper" style="height: 38px;">
+                    <form action="{{ url_for('cart.update_cart') }}" method="POST" style="display: flex;">
+                      <input type="hidden" name="product_id" value="{{ item.id }}">
+                      <input type="hidden" name="quantity" value="{{ item.quantity - 1 }}">
+                      <button type="submit" class="qty-step-btn" title="Decrease">-</button>
+                    </form>
+                    <input type="number" class="qty-input cart-qty-input" data-product-id="{{ item.id }}" value="{{ item.quantity }}" min="1" max="{{ item.stock }}" style="height: 36px; width: 40px;" />
+                    <form action="{{ url_for('cart.update_cart') }}" method="POST" style="display: flex;">
+                      <input type="hidden" name="product_id" value="{{ item.id }}">
+                      <input type="hidden" name="quantity" value="{{ item.quantity + 1 }}">
+                      <button type="submit" class="qty-step-btn" title="Increase">+</button>
+                    </form>
+                  </div>
+                </td>
+                <td class="cart-price-cell">
+                  {{ (item.price * item.quantity) | currency }}
+                </td>
+                <td>
+                  <a href="{{ url_for('cart.remove_from_cart', product_id=item.id) }}" class="mini-item-remove-btn" title="Remove item">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+          <a href="{{ url_for('shop.catalog') }}" class="btn" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-800);">
+            <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+          </a>
+
+          <a href="{{ url_for('cart.clear_cart') }}" style="color: var(--charcoal-500); font-size: 0.9rem;" onclick="return confirm('Clear all items from your cart?');">
+            Clear Cart
+          </a>
+        </div>
+      </div>
+
+      <!-- Summary Sidebar -->
+      <div>
+        <div class="cart-summary-box">
+          <h3 class="cart-summary-title">Order Summary</h3>
+
+          <div class="summary-row">
+            <span>Items Subtotal ({{ summary.items_count }} items)</span>
+            <span>{{ summary.subtotal | currency }}</span>
+          </div>
+
+          {% if summary.discount > 0 %}
+            <div class="summary-row" style="color: var(--terracotta);">
+              <span>Voucher Discount ({{ summary.promo.code }})</span>
+              <span>-{{ summary.discount | currency }}</span>
+            </div>
+          {% endif %}
+
+          <div class="summary-row">
+            <span>Estimated Shipping</span>
+            <span>
+              {% if summary.shipping_fee == 0 %}
+                <span style="color: var(--color-success); font-weight: 700;">FREE</span>
+              {% else %}
+                {{ summary.shipping_fee | currency }}
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="summary-row">
+            <span>GST / Taxes (5%)</span>
+            <span>{{ summary.tax | currency }}</span>
+          </div>
+
+          <div class="summary-row total-row">
+            <span>Total Amount</span>
+            <span style="color: var(--terracotta-dark);">{{ summary.grand_total | currency }}</span>
+          </div>
+
+          <!-- Coupon Code Form -->
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-ivory); padding-top: 1.25rem;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--charcoal-800); margin-bottom: 0.5rem;">
+              Have a Studio Voucher?
+            </div>
+            {% if summary.promo %}
+              <div style="background-color: #EBF5ED; border: 1px solid #C2DEC8; padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #276738;">
+                <span><strong>{{ summary.promo.code }}</strong> applied!</span>
+                <a href="{{ url_for('cart.remove_promo') }}" style="color: var(--color-danger); text-decoration: underline;">Remove</a>
+              </div>
+            {% else %}
+              <form action="{{ url_for('cart.apply_promo') }}" method="POST" class="promo-form-wrap">
+                <input type="text" name="promo_code" class="form-control promo-input" placeholder="e.g. CREATE10" required />
+                <button type="submit" class="btn btn-terracotta btn-sm">Apply</button>
+              </form>
+              <div style="font-size: 0.75rem; color: var(--charcoal-500);">Try code <code>CREATE10</code> for 10% discount</div>
+            {% endif %}
+          </div>
+
+          <div style="margin-top: 1.75rem;">
+            <a href="{{ url_for('checkout.index') }}" class="btn btn-terracotta btn-lg btn-block">
+              Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div style="font-size: 0.78rem; color: var(--charcoal-500); text-align: center; margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <i class="fa-solid fa-lock" style="color: var(--sage);"></i> Secure SSL 256-bit Razorpay Checkout
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 6rem 2rem; background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-xl); max-width: 680px; margin: 0 auto;">
+      <i class="fa-solid fa-palette" style="font-size: 4rem; color: var(--border-ivory); margin-bottom: 1.5rem;"></i>
+      <h2 style="font-size: 1.8rem; margin-bottom: 0.75rem;">Your Art Cart is Empty</h2>
+      <p style="color: var(--charcoal-600); max-width: 480px; margin: 0 auto 2rem; line-height: 1.6;">
+        Explore our selection of Belgian linen canvases, pure single-pigment oils, botanical honey watercolors, and handcrafted brushes.
+      </p>
+      <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta btn-lg">
+        Explore Art Supplies Collection
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

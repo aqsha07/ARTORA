@@ -1,0 +1,126 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Manage Art Products | ARTORA Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <span class="section-eyebrow" style="color: var(--terracotta);">Inventory Master</span>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.25rem;">Products Inventory</h1>
+      <p style="color: var(--charcoal-600); margin: 0;">Catalog of fine art supplies, raw surfaces, paints, and tools.</p>
+    </div>
+    <a href="{{ url_for('admin.product_new') }}" class="btn btn-terracotta btn-lg">
+      <i class="fa-solid fa-plus"></i> Add New Product
+    </a>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.25rem 1.75rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+    <form method="GET" action="{{ url_for('admin.products') }}" style="display: flex; gap: 1rem; flex: 1; align-items: center;">
+      <div style="flex: 1; position: relative;">
+        <input 
+          type="text" 
+          name="q" 
+          class="form-control" 
+          placeholder="Search by product name..." 
+          value="{{ search }}" 
+        />
+      </div>
+
+      <select name="category_id" class="form-select" style="max-width: 250px;">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if selected_category_id == cat.id %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="btn btn-terracotta btn-sm">Filter</button>
+      {% if search or selected_category_id %}
+        <a href="{{ url_for('admin.products') }}" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-700);">Reset</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Products Table Card -->
+  <div class="admin-table-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Badge</th>
+          <th>Rating</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="{{ p.primary_image_url }}" alt="{{ p.name }}" class="table-product-thumb" />
+                <div>
+                  <strong><a href="{{ url_for('shop.detail', slug=p.slug) }}" target="_blank" style="color: var(--charcoal-900);">{{ p.name }}</a></strong>
+                  <div style="font-size: 0.78rem; color: var(--charcoal-500);">Brand: {{ p.brand }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-sage">{{ p.category.name if p.category else 'General' }}</span>
+            </td>
+            <td>
+              <strong>{{ p.price | currency }}</strong>
+              {% if p.compare_at_price %}
+                <div style="font-size: 0.75rem; color: var(--charcoal-400); text-decoration: line-through;">
+                  {{ p.compare_at_price | currency }}
+                </div>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.stock_quantity > 15 %}
+                <span class="badge" style="background-color: #DEF7EC; color: #03543F;">{{ p.stock_quantity }} units</span>
+              {% elif p.stock_quantity > 0 %}
+                <span class="badge" style="background-color: #FEF08A; color: #854D0E;">{{ p.stock_quantity }} low stock</span>
+              {% else %}
+                <span class="badge" style="background-color: #FDE8E8; color: #9B1C1C;">Out of Stock</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.badge %}
+                <span class="badge badge-terracotta" style="font-size: 0.7rem;">{{ p.badge }}</span>
+              {% else %}
+                <span style="color: var(--charcoal-400); font-size: 0.8rem;">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.85rem; color: #E29B27;">
+                <i class="fa-solid fa-star"></i>
+                <span style="font-weight: 700; color: var(--charcoal-800);">{{ p.rating }}</span>
+                <span style="font-size: 0.75rem; color: var(--charcoal-400);">({{ p.reviews_count }})</span>
+              </div>
+            </td>
+            <td style="text-align: right;">
+              <div style="display: inline-flex; gap: 0.5rem;">
+                <a href="{{ url_for('admin.product_edit', id=p.id) }}" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-800);" title="Edit Product">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>
+
+                <form action="{{ url_for('admin.product_delete', id=p.id) }}" method="POST" onsubmit="return confirm('Permanently delete product \'{{ p.name }}\'?');" style="display: inline;">
+                  <button type="submit" class="btn btn-sm" style="background-color: #FDF2F2; border: 1px solid #F98080; color: #9B1C1C;" title="Delete Product">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

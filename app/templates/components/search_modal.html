@@ -1,0 +1,25 @@
+<!-- Live Search Autocomplete Modal Component -->
+<div class="search-modal-backdrop" id="searchModalBackdrop">
+  <div class="search-modal-box">
+    <div class="search-input-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input 
+        type="text" 
+        id="liveSearchInput" 
+        class="search-input-field" 
+        placeholder="Search Belgian linen, Kolinsky brushes, honey watercolors..." 
+        autocomplete="off"
+      />
+      <button type="button" class="search-close-btn" id="closeSearchModal" aria-label="Close search">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="search-results-container" id="liveSearchResults">
+      <p style="color: var(--charcoal-500); text-align: center; padding: 2rem 1rem; font-size: 0.95rem;">
+        <i class="fa-solid fa-palette" style="font-size: 2rem; color: var(--border-ivory); display: block; margin-bottom: 0.75rem;"></i>
+        Type to search across all 11 art supply categories...
+      </p>
+    </div>
+  </div>
+</div>

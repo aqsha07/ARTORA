@@ -1,0 +1,175 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Curator Studio Overview | ARTORA Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+    <div>
+      <span class="section-eyebrow" style="color: var(--terracotta);">Curator Operations</span>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.25rem;">Atelier Overview</h1>
+      <p style="color: var(--charcoal-600); margin: 0;">Real-time metrics, product stock levels, and customer orders.</p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+      <a href="{{ url_for('admin.product_new') }}" class="btn btn-terracotta">
+        <i class="fa-solid fa-plus"></i> Add New Product
+      </a>
+      <a href="{{ url_for('admin.orders') }}" class="btn" style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+        <i class="fa-solid fa-boxes-packing"></i> Manage Orders
+      </a>
+    </div>
+  </div>
+
+  <!-- Key Metrics 4-Card Grid -->
+  <div class="admin-metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon metric-icon-sales">
+        <i class="fa-solid fa-indian-rupee-sign"></i>
+      </div>
+      <div class="metric-data">
+        <h3>{{ total_sales | currency }}</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon metric-icon-orders">
+        <i class="fa-solid fa-box-archive"></i>
+      </div>
+      <div class="metric-data">
+        <h3>{{ total_orders }}</h3>
+        <p>Customer Orders</p>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon metric-icon-products">
+        <i class="fa-solid fa-palette"></i>
+      </div>
+      <div class="metric-data">
+        <h3>{{ total_products }}</h3>
+        <p>Active Art Supplies</p>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon metric-icon-users">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="metric-data">
+        <h3>{{ total_customers }}</h3>
+        <p>Registered Artists</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Stock Alert Banner / Table -->
+  {% if low_stock_products %}
+    <div class="admin-table-card" style="border-left: 4px solid var(--color-warning);">
+      <div class="admin-table-header" style="background-color: #FFFDF7;">
+        <div>
+          <h3 style="font-size: 1.15rem; color: #9A6208; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Low Inventory Alert ({{ low_stock_products | length }} Items)
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--charcoal-600); margin: 0;">These products have 15 or fewer units left in the studio.</p>
+        </div>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Units Remaining</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in low_stock_products %}
+            <tr>
+              <td>
+                <img src="{{ p.primary_image_url }}" alt="{{ p.name }}" class="table-product-thumb" />
+                <strong>{{ p.name }}</strong>
+              </td>
+              <td>{{ p.category.name if p.category else 'N/A' }}</td>
+              <td>{{ p.price | currency }}</td>
+              <td>
+                <span class="badge" style="background-color: #FDE8E8; color: #9B1C1C; font-weight: 700;">
+                  {{ p.stock_quantity }} units left
+                </span>
+              </td>
+              <td>
+                <a href="{{ url_for('admin.product_edit', id=p.id) }}" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-800);">
+                  Restock / Edit
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+  <!-- Recent Orders Table -->
+  <div class="admin-table-card">
+    <div class="admin-table-header">
+      <div>
+        <h3 style="font-size: 1.25rem;">Recent Studio Orders</h3>
+        <p style="font-size: 0.85rem; color: var(--charcoal-600); margin: 0;">Latest customer purchases and order fulfillment status.</p>
+      </div>
+      <a href="{{ url_for('admin.orders') }}" style="font-size: 0.9rem; color: var(--terracotta); font-weight: 600;">
+        View All Orders &rarr;
+      </a>
+    </div>
+
+    {% if recent_orders %}
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Destination</th>
+            <th>Amount</th>
+            <th>Payment Status</th>
+            <th>Order Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+            <tr>
+              <td>
+                <strong style="color: var(--terracotta);">{{ order.order_number }}</strong>
+                <div style="font-size: 0.78rem; color: var(--charcoal-500);">{{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+              </td>
+              <td>
+                <div>{{ order.full_name }}</div>
+                <div style="font-size: 0.78rem; color: var(--charcoal-500);">{{ order.email }}</div>
+              </td>
+              <td>{{ order.shipping_city }}, {{ order.shipping_state }}</td>
+              <td><strong>{{ order.total_amount | currency }}</strong></td>
+              <td>
+                <span style="font-size: 0.85rem; color: var(--color-success); font-weight: 600;">
+                  <i class="fa-solid fa-circle-check"></i> {{ order.payment_status }}
+                </span>
+              </td>
+              <td>
+                <span class="badge {{ order.status_badge_class }}">{{ order.status }}</span>
+              </td>
+              <td>
+                <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+                  Inspect
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div style="padding: 3rem; text-align: center; color: var(--charcoal-500);">
+        No orders placed yet.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

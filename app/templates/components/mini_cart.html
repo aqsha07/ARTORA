@@ -1,0 +1,54 @@
+<!-- Slide-out Mini-Cart Drawer Component -->
+<div class="cart-drawer-backdrop" id="cartDrawerBackdrop">
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>
+        <i class="fa-solid fa-bag-shopping" style="color: var(--terracotta);"></i>
+        Your Art Cart
+      </h3>
+      <button type="button" class="cart-drawer-close" id="closeCartDrawer" aria-label="Close Cart">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Free Shipping Progress Tracker -->
+    <div class="shipping-progress-banner">
+      <div id="cartDrawerProgressText">
+        {% if cart_subtotal >= free_shipping_threshold %}
+          <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> 
+          <strong>Congratulations!</strong> You qualify for Free Shipping.
+        {% else %}
+          Add items worth <strong>{{ (free_shipping_threshold - cart_subtotal) | currency }}</strong> to unlock Free Shipping.
+        {% endif %}
+      </div>
+      <div class="progress-bar-track">
+        <div 
+          class="progress-bar-fill" 
+          id="cartDrawerProgressFill" 
+          style="width: {{ [100, ((cart_subtotal / free_shipping_threshold) * 100) | int] | min }}%;"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Items List (populated dynamically or on page load) -->
+    <div class="cart-drawer-items" id="cartDrawerItems">
+      <!-- Injected via JavaScript refreshCartDrawer() -->
+    </div>
+
+    <!-- Cart Footer with Totals and CTA Buttons -->
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal-row">
+        <span>Subtotal</span>
+        <span id="cartDrawerSubtotal" style="color: var(--terracotta);">{{ cart_subtotal | currency }}</span>
+      </div>
+      <div class="cart-drawer-buttons">
+        <a href="{{ url_for('checkout.index') }}" class="btn btn-terracotta btn-block">
+          Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="{{ url_for('cart.view_cart') }}" class="btn btn-block" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+          View Full Cart
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

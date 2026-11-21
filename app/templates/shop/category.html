@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} | ARTORA Atelier{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <!-- Breadcrumbs -->
+  <div style="font-size: 0.85rem; color: var(--charcoal-500); margin-bottom: 2rem;">
+    <a href="{{ url_for('main.index') }}" style="color: inherit;">Home</a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <a href="{{ url_for('shop.catalog') }}" style="color: inherit;">Shop All</a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <span style="color: var(--terracotta); font-weight: 600;">{{ category.name }}</span>
+  </div>
+
+  <!-- Category Hero Showcase -->
+  <div class="category-hero">
+    <img src="{{ category.image_url }}" alt="{{ category.name }}" class="category-hero-bg" />
+    <div class="category-hero-content">
+      <div class="category-hero-icon">
+        <i class="fa-solid {{ category.icon_class or 'fa-palette' }}"></i>
+      </div>
+      <h1 class="category-hero-title">{{ category.name }}</h1>
+      {% if category.tagline %}
+        <p class="category-hero-tagline">{{ category.tagline }}</p>
+      {% endif %}
+      <p class="category-hero-desc">{{ category.description }}</p>
+    </div>
+  </div>
+
+  <!-- Category Products Toolbar -->
+  <div class="catalog-toolbar">
+    <div class="results-count">
+      Showing <strong>{{ products | length }}</strong> products in <em>{{ category.name }}</em>
+    </div>
+
+    <div class="catalog-sort-wrap">
+      <label for="categorySortSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--charcoal-700);">Sort By:</label>
+      <select 
+        id="categorySortSelect" 
+        class="sort-select" 
+        onchange="window.location.href = this.value"
+      >
+        <option value="{{ url_for('shop.category', slug=category.slug, sort='featured') }}" {% if sort_by == 'featured' %}selected{% endif %}>Curator Featured</option>
+        <option value="{{ url_for('shop.category', slug=category.slug, sort='price-asc') }}" {% if sort_by == 'price-asc' %}selected{% endif %}>Price: Low to High</option>
+        <option value="{{ url_for('shop.category', slug=category.slug, sort='price-desc') }}" {% if sort_by == 'price-desc' %}selected{% endif %}>Price: High to Low</option>
+        <option value="{{ url_for('shop.category', slug=category.slug, sort='rating') }}" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
+        <option value="{{ url_for('shop.category', slug=category.slug, sort='newest') }}" {% if sort_by == 'newest' %}selected{% endif %}>Newest Additions</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Category Product Grid -->
+  {% if products %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+      {% for product in products %}
+        {% include 'components/product_card.html' %}
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% include 'components/pagination.html' %}
+  {% else %}
+    <div style="text-align: center; padding: 4rem; background-color: var(--bg-ivory-light); border-radius: var(--radius-lg); border: 1px solid var(--border-ivory);">
+      <p style="color: var(--charcoal-600); font-size: 1.1rem;">New supplies for {{ category.name }} are currently being milled.</p>
+      <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta">Browse Other Departments</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

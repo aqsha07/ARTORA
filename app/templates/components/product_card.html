@@ -1,0 +1,80 @@
+<!-- Reusable Product Card Component -->
+<div class="product-card" data-product-id="{{ product.id }}">
+  <div class="product-card-img-wrap">
+    <a href="{{ url_for('shop.detail', slug=product.slug) }}">
+      <img 
+        src="{{ product.primary_image_url }}" 
+        alt="{{ product.name }}" 
+        class="product-card-img" 
+        loading="lazy"
+      />
+    </a>
+
+    <!-- Floating Badges -->
+    <div class="card-badge-wrap">
+      {% if product.badge %}
+        {% set badge_class = 'card-badge-bestseller' if product.badge == 'Bestseller' else ('card-badge-artisan' if product.badge == 'Artisan Choice' else ('card-badge-new' if product.badge == 'New Arrival' else 'card-badge-bestseller')) %}
+        <span class="card-badge {{ badge_class }}">{{ product.badge }}</span>
+      {% endif %}
+      {% if product.discount_percent > 0 %}
+        <span class="card-badge card-badge-discount">-{{ product.discount_percent }}%</span>
+      {% endif %}
+    </div>
+
+    <!-- Quick Floating Action Buttons -->
+    <div class="card-actions">
+      <button 
+        type="button" 
+        class="card-action-btn quick-view-btn" 
+        data-product-id="{{ product.id }}" 
+        title="Quick View"
+      >
+        <i class="fa-regular fa-eye"></i>
+      </button>
+
+      <button 
+        type="button" 
+        class="card-action-btn wishlist-toggle-btn {% if user_wishlist_ids and product.id in user_wishlist_ids %}active{% endif %}" 
+        data-product-id="{{ product.id }}" 
+        title="Save to Wishlist"
+      >
+        <i class="{% if user_wishlist_ids and product.id in user_wishlist_ids %}fa-solid fa-heart{% else %}fa-regular fa-heart{% endif %}"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="product-card-body">
+    <div class="product-meta-sub">
+      <span class="product-category-tag">{{ product.category.name if product.category else 'Art Supplies' }}</span>
+      <div class="product-rating">
+        <i class="fa-solid fa-star"></i>
+        <span>{{ product.rating }}</span>
+      </div>
+    </div>
+
+    <h3 class="product-card-title">
+      <a href="{{ url_for('shop.detail', slug=product.slug) }}">{{ product.name }}</a>
+    </h3>
+
+    {% if product.short_description %}
+      <p class="product-card-desc">{{ product.short_description }}</p>
+    {% endif %}
+
+    <div class="product-card-footer">
+      <div class="price-wrap">
+        <span class="current-price">{{ product.price | currency }}</span>
+        {% if product.compare_at_price and product.compare_at_price > product.price %}
+          <span class="compare-price">{{ product.compare_at_price | currency }}</span>
+        {% endif %}
+      </div>
+
+      <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="ajax-add-to-cart-form">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="card-add-cart-btn" title="Add to Cart">
+          <i class="fa-solid fa-bag-shopping"></i> Add
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Artist Dashboard | ARTORA{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <div class="profile-layout">
+    <!-- Left: Profile Sidebar -->
+    <aside class="profile-sidebar">
+      <div class="profile-user-summary">
+        <div class="profile-avatar">
+          {{ user.name[0] | upper }}
+        </div>
+        <h3 style="font-size: 1.3rem; margin-bottom: 2px;">{{ user.name }}</h3>
+        <div style="font-size: 0.85rem; color: var(--charcoal-500); margin-bottom: 0.5rem;">{{ user.email }}</div>
+        <span class="badge badge-sage">{{ user.role | title }} Member</span>
+      </div>
+
+      <nav class="profile-nav-list">
+        <a href="#overviewTab" class="profile-nav-link active">
+          <i class="fa-solid fa-gauge-high"></i> Overview
+        </a>
+        <a href="#ordersTab" class="profile-nav-link">
+          <i class="fa-solid fa-box-open"></i> Order History ({{ orders | length }})
+        </a>
+        <a href="{{ url_for('auth.wishlist') }}" class="profile-nav-link">
+          <i class="fa-solid fa-heart"></i> Saved Wishlist ({{ wishlist_items | length }})
+        </a>
+        {% if user.is_admin %}
+          <div style="border-top: 1px solid var(--border-ivory); margin: 0.5rem 0;"></div>
+          <a href="{{ url_for('admin.dashboard') }}" class="profile-nav-link" style="color: var(--terracotta);">
+            <i class="fa-solid fa-sliders"></i> Curator Admin Panel
+          </a>
+        {% endif %}
+        <div style="border-top: 1px solid var(--border-ivory); margin: 0.5rem 0;"></div>
+        <a href="{{ url_for('auth.logout') }}" class="profile-nav-link" style="color: var(--color-danger);">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Right: Profile Content Panels -->
+    <div>
+      <!-- Overview Metrics Grid -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; background-color: var(--terracotta-light); color: var(--terracotta); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+            <i class="fa-solid fa-box"></i>
+          </div>
+          <div>
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--charcoal-900); line-height: 1;">{{ orders | length }}</div>
+            <div style="font-size: 0.8rem; color: var(--charcoal-500); text-transform: uppercase; font-weight: 600; margin-top: 2px;">Orders Placed</div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; background-color: var(--sage-light); color: var(--sage-dark); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <div>
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--charcoal-900); line-height: 1;">{{ wishlist_items | length }}</div>
+            <div style="font-size: 0.8rem; color: var(--charcoal-500); text-transform: uppercase; font-weight: 600; margin-top: 2px;">Wishlist Items</div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--bg-ivory-light); border: 1px solid var(--border-ivory); border-radius: var(--radius-md); padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; background-color: var(--bg-ivory-warm); color: var(--charcoal-800); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--charcoal-900); line-height: 1;">{{ user.created_at.strftime('%b %Y') }}</div>
+            <div style="font-size: 0.8rem; color: var(--charcoal-500); text-transform: uppercase; font-weight: 600; margin-top: 2px;">Member Since</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Section -->
+      <div class="profile-content-card" id="ordersTab">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem;">Your Order History</h3>
+
+        {% if orders %}
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            {% for order in orders %}
+              <div class="order-history-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--border-ivory); padding-bottom: 0.75rem;">
+                  <div>
+                    <span style="font-weight: 700; color: var(--terracotta); font-size: 1.05rem;">{{ order.order_number }}</span>
+                    <div style="font-size: 0.8rem; color: var(--charcoal-500); margin-top: 2px;">
+                      Placed on {{ order.created_at.strftime('%d %B %Y at %I:%M %p') }}
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <span class="badge {{ order.status_badge_class }}">{{ order.status }}</span>
+                    <div style="font-weight: 700; color: var(--charcoal-900); font-size: 1.05rem; margin-top: 4px;">
+                      {{ order.total_amount | currency }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Items Thumbnails Strip -->
+                <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                  {% for item in order.items.all() %}
+                    <img 
+                      src="{{ item.product_image }}" 
+                      alt="{{ item.product_name }}" 
+                      title="{{ item.product_name }} ({{ item.quantity }}x)"
+                      style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-xs); border: 1px solid var(--border-ivory);"
+                    />
+                  {% endfor %}
+                  <span style="font-size: 0.82rem; color: var(--charcoal-600); margin-left: 0.5rem;">
+                    {{ order.total_items_count }} items total
+                  </span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+                  <span style="color: var(--charcoal-600);">
+                    Payment: <strong>{{ order.payment_status }}</strong> ({{ order.payment_method | upper }})
+                  </span>
+                  <a href="{{ url_for('checkout.success', order_number=order.order_number) }}" class="btn btn-sm" style="background-color: var(--bg-ivory-warm); border: 1px solid var(--border-ivory); color: var(--charcoal-900);">
+                    View Receipt & Tracking
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 3rem 1rem; color: var(--charcoal-500);">
+            <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--border-ivory); margin-bottom: 1rem;"></i>
+            <p>You haven't placed any atelier orders yet.</p>
+            <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta btn-sm">Explore Collection</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Studio Profile Settings Form -->
+      <div class="profile-content-card">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem;">Artist Details & Bio</h3>
+
+        <form action="{{ url_for('auth.profile') }}" method="POST">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div class="form-group">
+              <label class="form-label" for="profileName">Full Name</label>
+              <input type="text" name="name" id="profileName" class="form-control" value="{{ user.name }}" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="profilePhone">Phone Number</label>
+              <input type="tel" name="phone" id="profilePhone" class="form-control" value="{{ user.phone or '' }}" placeholder="+91 98765 43210" />
+            </div>
+
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label" for="profileBio">Artist Statement / Mediums of Focus</label>
+              <textarea name="bio" id="profileBio" class="form-control" placeholder="e.g. Contemporary landscape oil painter and plein-air watercolorist.">{{ user.bio or '' }}</textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-terracotta">
+            Save Profile Changes
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop All Fine Art Supplies | ARTORA{% endblock %}
+
+{% block content %}
+<div class="container section-sm">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.85rem; color: var(--charcoal-500); margin-bottom: 2rem;">
+    <a href="{{ url_for('main.index') }}" style="color: inherit;">Home</a>
+    <span style="margin: 0 0.5rem;">/</span>
+    <span style="color: var(--charcoal-900); font-weight: 600;">Shop All Supplies</span>
+    {% if selected_category %}
+      <span style="margin: 0 0.5rem;">/</span>
+      <span style="color: var(--terracotta); font-weight: 600;">{{ selected_category.name }}</span>
+    {% endif %}
+  </div>
+
+  <div class="catalog-layout">
+    <!-- Filter Sidebar -->
+    <aside class="catalog-sidebar">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem;">Filter Mediums</h3>
+        {% if selected_category or min_price or max_price or search_query or badge_filter or in_stock_only %}
+          <a href="{{ url_for('shop.catalog') }}" style="font-size: 0.8rem; color: var(--terracotta); font-weight: 600;">
+            Clear All
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Categories Filter List -->
+      <div class="filter-group">
+        <h4 class="filter-title">All Departments</h4>
+        <div class="filter-categories-list">
+          <a 
+            href="{{ url_for('shop.catalog', q=search_query, sort=sort_by) }}" 
+            class="filter-category-link {% if not selected_category %}active{% endif %}"
+          >
+            <span>All Categories</span>
+          </a>
+          {% for cat in categories %}
+            <a 
+              href="{{ url_for('shop.catalog', category=cat.slug, q=search_query, sort=sort_by) }}" 
+              class="filter-category-link {% if selected_category and selected_category.slug == cat.slug %}active{% endif %}"
+            >
+              <span>{{ cat.name }}</span>
+              <span class="filter-count">{{ cat.product_count }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Price Range Filter -->
+      <div class="filter-group">
+        <h4 class="filter-title">Price Range (₹)</h4>
+        <form method="GET" action="{{ url_for('shop.catalog') }}">
+          {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+          {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+          {% if sort_by %}<input type="hidden" name="sort" value="{{ sort_by }}">{% endif %}
+
+          <div class="price-inputs">
+            <input type="number" name="min_price" class="price-input" placeholder="Min ₹" value="{{ min_price if min_price is not none else '' }}" />
+            <span>—</span>
+            <input type="number" name="max_price" class="price-input" placeholder="Max ₹" value="{{ max_price if max_price is not none else '' }}" />
+          </div>
+          <button type="submit" class="btn btn-terracotta btn-sm btn-block">Apply Price</button>
+        </form>
+      </div>
+
+      <!-- Curator Badges Filter -->
+      <div class="filter-group">
+        <h4 class="filter-title">Curator Highlights</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <a href="{{ url_for('shop.catalog', badge='Bestseller', category=selected_category.slug if selected_category else None) }}" class="badge badge-terracotta" style="padding: 0.45rem 0.75rem; text-decoration: none; justify-content: space-between;">
+            <span>Bestsellers</span>
+            <i class="fa-solid fa-fire"></i>
+          </a>
+          <a href="{{ url_for('shop.catalog', badge='Artisan Choice', category=selected_category.slug if selected_category else None) }}" class="badge badge-sage" style="padding: 0.45rem 0.75rem; text-decoration: none; justify-content: space-between;">
+            <span>Artisan Choice</span>
+            <i class="fa-solid fa-award"></i>
+          </a>
+          <a href="{{ url_for('shop.catalog', badge='New Arrival', category=selected_category.slug if selected_category else None) }}" class="badge badge-charcoal" style="padding: 0.45rem 0.75rem; text-decoration: none; justify-content: space-between;">
+            <span>New Arrivals</span>
+            <i class="fa-solid fa-sparkles"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Catalog Products Area -->
+    <div>
+      <!-- Catalog Top Toolbar -->
+      <div class="catalog-toolbar">
+        <div class="results-count">
+          Showing <strong>{{ products | length }}</strong> of <strong>{{ pagination.total }}</strong> fine art products
+          {% if search_query %}
+            matching "<em>{{ search_query }}</em>"
+          {% endif %}
+        </div>
+
+        <div class="catalog-sort-wrap">
+          <label for="catalogSortSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--charcoal-700);">Sort By:</label>
+          <select 
+            id="catalogSortSelect" 
+            class="sort-select" 
+            onchange="window.location.href = this.value"
+          >
+            <option value="{{ url_for('shop.catalog', sort='featured', category=selected_category.slug if selected_category else None, q=search_query, badge=badge_filter) }}" {% if sort_by == 'featured' %}selected{% endif %}>Curator Featured</option>
+            <option value="{{ url_for('shop.catalog', sort='price-asc', category=selected_category.slug if selected_category else None, q=search_query, badge=badge_filter) }}" {% if sort_by == 'price-asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="{{ url_for('shop.catalog', sort='price-desc', category=selected_category.slug if selected_category else None, q=search_query, badge=badge_filter) }}" {% if sort_by == 'price-desc' %}selected{% endif %}>Price: High to Low</option>
+            <option value="{{ url_for('shop.catalog', sort='rating', category=selected_category.slug if selected_category else None, q=search_query, badge=badge_filter) }}" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
+            <option value="{{ url_for('shop.catalog', sort='newest', category=selected_category.slug if selected_category else None, q=search_query, badge=badge_filter) }}" {% if sort_by == 'newest' %}selected{% endif %}>Newest Additions</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      {% if products %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+          {% for product in products %}
+            {% include 'components/product_card.html' %}
+          {% endfor %}
+        </div>
+
+        <!-- Reusable Pagination -->
+        {% include 'components/pagination.html' %}
+      {% else %}
+        <div style="text-align: center; padding: 5rem 2rem; background-color: var(--bg-ivory-light); border-radius: var(--radius-lg); border: 1px solid var(--border-ivory);">
+          <i class="fa-solid fa-paintbrush" style="font-size: 3.5rem; color: var(--border-ivory); margin-bottom: 1.25rem;"></i>
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No Products Found</h3>
+          <p style="color: var(--charcoal-600); max-width: 440px; margin: 0 auto 1.5rem;">
+            We could not find any art materials matching your current filter selection. Try resetting filters or exploring another category.
+          </p>
+          <a href="{{ url_for('shop.catalog') }}" class="btn btn-terracotta">
+            Clear All Filters & View All
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
