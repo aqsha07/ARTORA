@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: artora-web
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run.py
+    envVars:
+      - key: SECRET_KEY
+        value: ${SECRET_KEY}
+      - key: DATABASE_URL
+        value: ${DATABASE_URL}
+      - key: RAZORPAY_KEY_ID
+        value: ${RAZORPAY_KEY_ID}
+      - key: RAZORPAY_KEY_SECRET
+        value: ${RAZORPAY_KEY_SECRET}
+    healthCheckPath: /
+    postDeployCommand: python seed_data.py
